@@ -3,10 +3,10 @@ name: Node.js CI Workflow
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  
 
 jobs:
+
   build:
     # Use runs-on to define the type of machine to run the job on
     runs-on: ubuntu-latest
@@ -28,3 +28,15 @@ jobs:
 
     - name: Run tests
       run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Deploy to Render
+      uses: JorgeLNJunior/render-deploy@v1.5.0
+      with:
+        service_id: ${{ secrets.SERVICE_ID }}
+        api_key: ${{ secrets.RENDER_TOKEN }}
+        wait_deploy: true    
